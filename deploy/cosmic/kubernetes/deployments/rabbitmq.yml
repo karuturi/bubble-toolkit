@@ -1,23 +1,64 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: rabbitmq
+  name: rabbitmq-0
   namespace: cosmic
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: rabbitmq
+        app: rabbitmq-0
+        rmqcluster: bubble
     spec:
       containers:
       - name: rabbitmq
         image: rabbitmq:management
         env:
+        - name: HOSTNAME
+          value: rabbitmq-0
         - name: RABBITMQ_DEFAULT_USER
           value: root
         - name: RABBITMQ_DEFAULT_PASS
           value: password
+        - name: RABBITMQ_CLUSTER_NODES
+          value: '{[rabbitmq-0, rabbitmq-1], disc}'
+        - name: RABBITMQ_ERLANG_COOKIE
+          value: TDUFPYXNUVAHSXGEZNSN
+        ports:
+        - containerPort: 15672
+        - containerPort: 4369
+        - containerPort: 5671
+        - containerPort: 5672
+        - containerPort: 25672
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rabbitmq-1
+  namespace: cosmic
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-1
+        rmqcluster: bubble
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:management
+        env:
+        - name: HOSTNAME
+          value: rabbitmq-1
+        - name: RABBITMQ_DEFAULT_USER
+          value: root
+        - name: RABBITMQ_DEFAULT_PASS
+          value: password
+        - name: RABBITMQ_CLUSTER_NODES
+          value: '{[rabbitmq-0, rabbitmq-1], disc}'
+        - name: RABBITMQ_ERLANG_COOKIE
+          value: TDUFPYXNUVAHSXGEZNSN
         ports:
         - containerPort: 15672
         - containerPort: 4369
