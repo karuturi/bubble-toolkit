@@ -204,11 +204,14 @@ function install_kvm_packages {
   ${ssh_base} ${hvuser}@${hvip} yum -y remove cloudstack-common
   ${ssh_base} ${hvuser}@${hvip} rm -f /etc/cloudstack/agent/agent.properties
   ${ssh_base} ${hvuser}@${hvip} yum -y localinstall cloudstack-agent* cloudstack-common*
-  if [ "$hasNsxDevice" == "True" ]; then
-    ${ssh_base} ${hvuser}@${hvip} 'echo "libvirt.vif.driver=com.cloud.hypervisor.kvm.resource.OvsVifDriver" >> /etc/cloudstack/agent/agent.properties'
-    ${ssh_base} ${hvuser}@${hvip} 'echo "network.bridge.type=openvswitch" >> /etc/cloudstack/agent/agent.properties'
-    ${ssh_base} ${hvuser}@${hvip} 'echo "guest.cpu.mode=host-model" >> /etc/cloudstack/agent/agent.properties'
-  fi
+  #if [ "$hasNsxDevice" == "True" ]; then
+  ${ssh_base} ${hvuser}@${hvip} 'echo "libvirt.vif.driver=com.cloud.hypervisor.kvm.resource.OvsVifDriver" >> /etc/cloudstack/agent/agent.properties'
+  ${ssh_base} ${hvuser}@${hvip} 'echo "network.bridge.type=openvswitch" >> /etc/cloudstack/agent/agent.properties'
+  ${ssh_base} ${hvuser}@${hvip} 'echo "guest.cpu.mode=host-model" >> /etc/cloudstack/agent/agent.properties'
+  #fi
+  ${ssh_base} ${hvuser}@${hvip} 'echo "guest.network.device=cloudbr0" >> /etc/cloudstack/agent/agent.properties'
+  ${ssh_base} ${hvuser}@${hvip} 'echo "public.network.device=pub0" >> /etc/cloudstack/agent/agent.properties'
+  ${ssh_base} ${hvuser}@${hvip} 'echo "private.network.device=cloudbr0" >> /etc/cloudstack/agent/agent.properties'
 }
 
 function clean_kvm {
@@ -300,7 +303,7 @@ if [ ${skip} -eq 0 ]; then
   cd /data/git/$HOSTNAME/cloudstack
   echo "Compiling CloudStack"
   date
-  mvn ${clean} install -P developer,systemvm ${compile_threads} ${use_simulator}
+  mvn ${clean} install -P developer,systemvm ${compile_threads} ${use_simulator} -DskipTests=true
   if [ $? -ne 0 ]; then
     date
     echo "Build failed, please investigate!"
