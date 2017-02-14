@@ -207,7 +207,7 @@ function install_kvm_packages {
   #if [ "$hasNsxDevice" == "True" ]; then
   ${ssh_base} ${hvuser}@${hvip} 'echo "libvirt.vif.driver=com.cloud.hypervisor.kvm.resource.OvsVifDriver" >> /etc/cloudstack/agent/agent.properties'
   ${ssh_base} ${hvuser}@${hvip} 'echo "network.bridge.type=openvswitch" >> /etc/cloudstack/agent/agent.properties'
-  ${ssh_base} ${hvuser}@${hvip} 'echo "guest.cpu.mode=host-model" >> /etc/cloudstack/agent/agent.properties'
+  ${ssh_base} ${hvuser}@${hvip} 'echo "guest.cpu.mode=host-passthrough" >> /etc/cloudstack/agent/agent.properties'
   #fi
   ${ssh_base} ${hvuser}@${hvip} 'echo "guest.network.device=cloudbr0" >> /etc/cloudstack/agent/agent.properties'
   ${ssh_base} ${hvuser}@${hvip} 'echo "public.network.device=pub0" >> /etc/cloudstack/agent/agent.properties'

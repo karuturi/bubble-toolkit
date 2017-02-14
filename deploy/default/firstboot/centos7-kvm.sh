@@ -37,7 +37,7 @@ cp -pr /etc/cloudstack/agent/agent.properties /etc/cloudstack/agent/agent.proper
 # network.bridge.type=openvswitch
 #echo "libvirt.vif.driver=com.cloud.hypervisor.kvm.resource.OvsVifDriver" >> /etc/cloudstack/agent/agent.properties
 #echo "network.bridge.type=openvswitch" >> /etc/cloudstack/agent/agent.properties
-echo "guest.cpu.mode=host-model" >> /etc/cloudstack/agent/agent.properties
+echo "guest.cpu.mode=host-passthrough" >> /etc/cloudstack/agent/agent.properties
 
 # Set the logging to DEBUG
 sed -i 's/INFO/DEBUG/g' /etc/cloudstack/agent/log4j-cloud.xml
